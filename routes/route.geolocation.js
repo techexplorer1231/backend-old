@@ -6,7 +6,7 @@ var geolocationController = require('../controllers/controller.geolocation')
 /* GET users listing. */
 // middleware to use for all requests
 router.use(function(req, res, next) {
-    console.log(req.body.location);
+    console.log(req.body);
     next(); // make sure we go to the next routes and don't stop here
 });
 
