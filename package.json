@@ -7,16 +7,17 @@
     "test": "jasmine-node spec --color --verbose"
   },
   "dependencies": {
+    "agenda": "^0.6.19",
+    "body-parser": "~1.0.0",
+    "cookie-parser": "~1.0.1",
+    "cors": "~2.4.1",
+    "debug": "~0.7.4",
     "express": "~4.2.0",
-    "static-favicon": "~1.0.0",
+    "jasmine-node": "~1.14.5",
     "mongoose": "^3.8.14",
     "morgan": "~1.0.0",
-    "cookie-parser": "~1.0.1",
-    "body-parser": "~1.0.0",
-    "debug": "~0.7.4",
-    "jasmine-node": "~1.14.5",
-    "superagent": "^0.18.2",
-    "cors": "~2.4.1",
-    "socket.io": "~1.1.0"
+    "socket.io": "~1.1.0",
+    "static-favicon": "~1.0.0",
+    "superagent": "^0.18.2"
   }
 }
