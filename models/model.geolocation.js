@@ -4,7 +4,7 @@ var GeolocationSchema = new Schema({
     name: {},
 	processed:{
 		type: Number,
-		default: 0
+		default: '0'
 	}
 });
 
