@@ -60,7 +60,7 @@ app.use(function(err, req, res, next) {
     });
 });
 
-var jobSchedule = require('./job-schedule.js');
-jobSchedule.setupJobs();
+// var jobSchedule = require('./job-schedule.js');
+// jobSchedule.setupJobs();
 
 module.exports = app;

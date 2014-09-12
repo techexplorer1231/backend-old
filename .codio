@@ -3,7 +3,8 @@
 
 // Run button configuration
   "commands": {
-	    "npm start":"nodemon ./bin/www"
+	  "run js":"mongo calculateDistance.js",
+	  "npm start":"nodemon ./bin/www"
   },
 
 // Preview button configuration
