@@ -14,7 +14,7 @@ var totalDistance;
 var cursorCount;
 //variable array that will save different users
 var users = db.geolocations.distinct('user')
-print(users[0])
+
 for(var i = 0; i < users.length; i++) {
     totalDistance = 0;
     cursorCount = 0;
