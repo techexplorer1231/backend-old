@@ -2,87 +2,102 @@ conn = new Mongo();
 db = connect("localhost:27017/myApp");
 //variable trip_start, trip_end
 var trip_start = false;
-var trip_end   = false;
+var trip_end = false;
 //variable object to store previous and new location co-ordinates 
 var prev_location = {};
 var new_location = {};
 //variable string to store previous and new location time 
 var prev_time, new_time;
-
 //variable to store total distance
 var totalDistance;
-
+// variable to store cursor count
+var cursorCount;
 //variable array that will save different users
 var users = db.geolocations.distinct('user')
 print(users[0])
 for(var i = 0; i < users.length; i++) {
+    totalDistance = 0;
+    cursorCount = 0;
     cursor = db.geolocations.find({
         $and: [{
-            processed : '0'
+            processed: '0'
         }, {
             user: users[i]
         }]
     });
-    while(cursor.hasNext()) {
-        var a = cursor.next();
+	if( db.distances.find({user : users[i]}).count() == 0 ){
+		totalDistance = 0;
+		db.distances.insert({name : users[i] , distances : 0})
+	}else{
+		totalDistance = 0;
+	}
+	while(cursor.hasNext()) {
+		var a = cursor.next();
 		//if speed is greater than average human walking speed
-		if(a.location.speed < 5 && trip_start === false && trip_end === false){
+		if(a.location.speed < 5 && trip_start === false && trip_end === false) {
 			new_location = {
-				latitude : a.location.latitude,
+				latitude: a.location.latitude,
 				longitude: a.location.longitude
 			}
 			prev_location = {};
 			trip_start = true;
-			trip_end   = false;
-		}else if(a.location.speed > 5 && trip_start === true && trip_end === false){
+			trip_end = false;
+		} else if(a.location.speed > 5 && trip_start === true && trip_end === false) {
 			prev_location = {
-				latitude : new_location.latitude,
+				latitude: new_location.latitude,
 				longitude: new_location.longitude
 			}
 			new_location = {
-				latitude : a.location.latitude,
+				latitude: a.location.latitude,
 				longitude: a.location.longitude
 			}
-			print(haversineDistance(prev_location, new_location,{unit : 'km'}));
+			totalDistance += (haversineDistance(prev_location, new_location, {
+				unit: 'km'
+			}));
 			print('i ran when speed > 5')
 			trip_start = true;
-			trip_end   = false;
-		}else if(a.location.speed < 5 && trip_start === true && trip_end === false){
+			trip_end = false;
+		} else if(a.location.speed < 5 && trip_start === true && trip_end === false) {
 			prev_location = {
-				latitude : new_location.latitude,
+				latitude: new_location.latitude,
 				longitude: new_location.longitude
 			}
 			new_location = {
-				latitude : a.location.latitude,
+				latitude: a.location.latitude,
 				longitude: a.location.longitude
 			}
-			print(haversineDistance(prev_location, new_location,{unit : 'km'}));
+			totalDistance += (haversineDistance(prev_location, new_location, {
+				unit: 'km'
+			}));
 			print('i ran when speed < 5')
 			trip_start = false;
-			trip_end   = false;
-		}else if(a.location.speed > 5 && trip_start === false && trip_end === false){
+			trip_end = false;
+		} else if(a.location.speed > 5 && trip_start === false && trip_end === false) {
 			prev_location = {
-				latitude : new_location.latitude,
+				latitude: new_location.latitude,
 				longitude: new_location.longitude
 			}
 			new_location = {
-				latitude : a.location.latitude,
+				latitude: a.location.latitude,
 				longitude: a.location.longitude
 			}
-			print(haversineDistance(prev_location, new_location,{unit : 'km'}));
+			totalDistance += (haversineDistance(prev_location, new_location, {
+				unit: 'km'
+			}));
 			trip_start = true;
-			trip_end   = false;
+			trip_end = false;
 			print('i ran when after speed = 5')
 		}
-    }
+	}
+print(totalDistance + users[i]);
+	db.distances.update( {name : users[i]},{name : users[i], distance : totalDistance},{ upsert: true });
 }
-
 //call method to calculate distance
 // print(haversineDistance(start, end, {
 //    unit: 'km'
 // }));
-
 // returns radians
+
 function toRad(num) {
     return num * Math.PI / 180
 }
