@@ -90,7 +90,7 @@ for(var i = 0; i < users.length; i++) {
 		}
 	}
 print(totalDistance + users[i]);
-	db.distances.update( {name : users[i]},{name : users[i], distance : totalDistance},{ upsert: true });
+	db.distances.update( {name : users[i]},{name : users[i], distances : totalDistance},{ upsert: true });
 }
 //call method to calculate distance
 // print(haversineDistance(start, end, {
