@@ -12,6 +12,7 @@ mongoose.connect(uri);
 var users = require('./routes/route.users');
 var products = require('./routes/route.products');
 var geolocation = require('./routes/route.geolocation');
+var distance = require('./routes/route.distance');
 
 var app = express();
 app.use(cors());
@@ -25,6 +26,7 @@ app.use(cookieParser());
 app.use('/users', users);
 app.use('/products', products);
 app.use('/geolocation', geolocation);
+app.use('/distance', distance);
 
 // 404 catch-all handler (middleware)
 app.use(function(req, res, next) {

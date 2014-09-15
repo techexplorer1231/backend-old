@@ -3,11 +3,11 @@ db = connect("localhost:27017/myApp");
 //variable trip_start, trip_end
 var trip_start = false;
 var trip_end = false;
-//variable object to store previous and new location co-ordinates 
+//variable object to store previous and new location co-ordinates
 var prev_location = {};
 var new_location = {};
-//variable string to store previous and new location time 
-var prev_time, new_time;
+//variable string to store previous and new location time
+var prev_time,new_time;
 //variable to store total distance
 var totalDistance = 0.000;
 // variable to store cursor count
@@ -20,14 +20,14 @@ for(var i = 0; i < users.length; i++) {
     cursorCount = 0;
     cursor = db.geolocations.find({
         $and: [{
-            processed: '0'
+            processed: 0
         }, {
-            user: 'kushal'//users[i]
+            user: users[i]
         }]
     });
 	if( db.distances.find({user : users[i]}).count() == 0 ){
 		totalDistance = 0;
-		db.distances.insert({user : users[i] , distances : 0})
+		db.distances.insert({user : users[i] , distances : 0, startTime : new Date().toISOString(), endTime : new Date().toISOString(), fuelConsumed : 0})
 	}else{
 		totalDistance = 0;
 	}
@@ -54,7 +54,7 @@ for(var i = 0; i < users.length; i++) {
 			totalDistance += (haversineDistance(prev_location, new_location, {
 				unit: 'km'
 			}));
-			print('i ran when speed > 5')
+			//print('i ran when speed > 5')
 			trip_start = true;
 			trip_end = false;
 		} else if(a.location.speed < 5 && trip_start === true && trip_end === false) {
@@ -69,7 +69,7 @@ for(var i = 0; i < users.length; i++) {
 			totalDistance += (haversineDistance(prev_location, new_location, {
 				unit: 'km'
 			}));
-			print('i ran when speed < 5')
+			//print('i ran when speed < 5')
 			trip_start = false;
 			trip_end = false;
 		} else if(a.location.speed > 5 && trip_start === false && trip_end === false) {
@@ -81,7 +81,7 @@ for(var i = 0; i < users.length; i++) {
 				}	
 				trip_start = true;
 				trip_end = false;
-				print('i ran when after speed = 5')					
+				//print('i ran when after speed = 5')					
 			}else{
 				prev_location = {
 					latitude: new_location.latitude,
@@ -96,18 +96,14 @@ for(var i = 0; i < users.length; i++) {
 				}));
 				trip_start = true;
 				trip_end = false;
-				print('i ran when after speed = 5')			
+				//print('i ran when after speed = 5')			
 			}
 		}
+		//update records once they are processed
+		db.geolocations.update({ "_id" : a._id},{$set:{processed : 0}});
 	}
-	print(totalDistance + users[i]);
-	db.distances.update( {user : users[i]},{user : users[i], distances : totalDistance},{ upsert: true });
+	db.distances.update( {user : users[i]},{ $set:{user : users[i], distances : totalDistance, endTime : new Date().toISOString()}});
 }
-//call method to calculate distance
-// print(haversineDistance(start, end, {
-//    unit: 'km'
-// }));
-// returns radians
 
 function toRad(num) {
     return num * Math.PI / 180
@@ -115,7 +111,6 @@ function toRad(num) {
 //calculate distance between two co-ordinates
 
 function haversineDistance(start, end, options) {
-	printjson(start)
     var km = 6371
     var mile = 3960
     options = options || {}
@@ -129,6 +124,6 @@ function haversineDistance(start, end, options) {
     if(options.threshold) {
         return options.threshold > (R * c)
     } else {
-        return R * c.toPrecision(4)
+        return R * c
     }
 }
