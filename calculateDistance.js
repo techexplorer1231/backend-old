@@ -20,7 +20,7 @@ for(var i = 0; i < users.length; i++) {
     cursorCount = 0;
     cursor = db.geolocations.find({
         $and: [{
-            processed: 0
+            processed: "0"
         }, {
             user: users[i]
         }]
@@ -54,7 +54,7 @@ for(var i = 0; i < users.length; i++) {
 			totalDistance += (haversineDistance(prev_location, new_location, {
 				unit: 'km'
 			}));
-			//print('i ran when speed > 5')
+			print('i ran when speed > 5')
 			trip_start = true;
 			trip_end = false;
 		} else if(a.location.speed < 5 && trip_start === true && trip_end === false) {
@@ -69,7 +69,7 @@ for(var i = 0; i < users.length; i++) {
 			totalDistance += (haversineDistance(prev_location, new_location, {
 				unit: 'km'
 			}));
-			//print('i ran when speed < 5')
+			print('i ran when speed < 5')
 			trip_start = false;
 			trip_end = false;
 		} else if(a.location.speed > 5 && trip_start === false && trip_end === false) {
@@ -81,7 +81,7 @@ for(var i = 0; i < users.length; i++) {
 				}	
 				trip_start = true;
 				trip_end = false;
-				//print('i ran when after speed = 5')					
+				print('i ran when after speed = 5 first')					
 			}else{
 				prev_location = {
 					latitude: new_location.latitude,
@@ -96,11 +96,11 @@ for(var i = 0; i < users.length; i++) {
 				}));
 				trip_start = true;
 				trip_end = false;
-				//print('i ran when after speed = 5')			
+				print('i ran when after speed = 5 second')			
 			}
 		}
 		//update records once they are processed
-		db.geolocations.update({ "_id" : a._id},{$set:{processed : 0}});
+		db.geolocations.update({ "_id" : a._id},{$set:{processed : "0"}});
 	}
 	db.distances.update( {user : users[i]},{ $set:{user : users[i], distances : totalDistance, endTime : new Date().toISOString()}});
 }

@@ -11,7 +11,7 @@ exports.insert = function(req, res) {
 	});
 }
 // get specific user
-// //http://mambo-action-3001.codio.io/distance/pratap
+//http://mambo-action-3001.codio.io/distance/pratap
 exports.read = function(req, res) {
 	distanceModel.find({user : req.params.user}).exec(function(err, data) {
         if(err) res.send(err);
@@ -21,7 +21,7 @@ exports.read = function(req, res) {
 
 //http://mambo-action-3001.codio.io/distance/pratap/20
 exports.update = function(req, res) {
-	distanceModel.update({user : req.params.user}, {$set :{ fuelConsumed: req.params.fuelConsumed }},{upsert : true} , function (err, numberAffected, raw) {
+	distanceModel.update({user : req.params.user}, {$inc: {fuelConsumed: req.params.fuelConsumed }},{upsert : true} , function (err, numberAffected, raw) {
        if(err) res.send(err);
        res.json({
            message: 'Fuel updated!'

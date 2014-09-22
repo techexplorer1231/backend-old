@@ -14,7 +14,7 @@
     "debug": "~0.7.4",
     "express": "~4.2.0",
     "jasmine-node": "~1.14.5",
-    "mongoose": "^3.8.14",
+    "mongoose": "3.8.16",
     "morgan": "~1.0.0",
     "socket.io": "~1.1.0",
     "static-favicon": "~1.0.0",

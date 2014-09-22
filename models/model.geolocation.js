@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 var GeolocationSchema = new Schema({
     name: {},
 	processed:{
-		type: Number,
+		type: String,
 		default: '0'
 	}
 });
